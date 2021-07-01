@@ -20,7 +20,7 @@
         <tr>
             <th scope="col">id</th>
             <th scope="col">Title</th>
-            <th scope="col">Description</th>
+            {{!-- <th scope="col">Description</th> --}}
             <th scope="col">Orgin</th>
             <th scope="col">Current</th>
             <th scope="col">Catagory</th>
@@ -38,7 +38,7 @@
         <tr>
             <th scope="row">{{this.id}}</th>
             <td>{{this.title}}</td>
-            <td>{{this.descr}}</td>
+            {{!-- <td>{{this.descr}}</td> --}}
             <td>{{this.orgin}}</td>
             <td>{{this.current}}</td>
             <th>{{this.catagory}}</th>
@@ -48,11 +48,11 @@
             <td>{{this.frm_fctr}}</td>
             <td class="text-end">
                 <div>
-                    <a href="/view-item/{{this.id}}" type="button" class="btn btn-light btn-sm"><i
+                    <a href="/view-item/{{this.id}}" type="button" class="btn btn-light btn-sm mt-1"><i
                             class="bi bi-eye"></i> View</a>
-                    <a href="/edit-item/{{this.id}}" type="button" class="btn btn-light btn-sm"><i
+                    <a href="/edit-item/{{this.id}}" type="button" class="btn btn-light btn-sm mt-1"><i
                             class="bi bi-pencil"></i> Edit</a>
-                    <a href="/{{this.id}}" type="button" class="btn btn-danger btn-sm"><i class="bi bi-trash"></i>
+                    <a href="/{{this.id}}" type="button" class="btn btn-danger btn-sm mt-1"><i class="bi bi-trash"></i>
                         Delete</a>
                 </div>
             </td>

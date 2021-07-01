@@ -21,7 +21,7 @@ exports.view = (req, res) => {
         console.log('Connected as ID ' + connection.threadId);
         // Use the connection
         connection.query('USE jackson_catalog');
-        connection.query('SELECT * FROM items', (err, rows) => {
+        connection.query('SELECT * FROM items ORDER BY `catagory` ASC', (err, rows) => {
             // Whem done with connection, release it
             connection.release();
             if (!err) {
@@ -79,7 +79,7 @@ exports.create = (req, res) => {
             // Whem done with connection, release it
             connection.release();
             if (!err) {
-                res.render('add-item', { alert: 'User added successfully!'});
+                res.render('add-item', { alert: `${title} has been added successfully.`});
             } else {
                 console.log(err);
             }
@@ -130,7 +130,7 @@ exports.update = (req, res) => {
                         // Whem done with connection, release it
                         connection.release();
                         if (!err) {
-                            res.render('edit-item', { rows, alert: `${first_name} has been updated.` });
+                            res.render('edit-item', { rows, alert: `${title} has been updated.` });
                         } else {
                             console.log(err);
                         }
