@@ -1,0 +1,49 @@
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">View Item</li>
+        </ol>
+    </nav>
+
+    <div class="view-user p-5">
+        {{#each rows}}
+        <div class="row">
+            <div class="col">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Title</th>
+                            <th scope="col">Description</th>
+                            <th scope="col">Orgin</th>
+                            <th scope="col">Current</th>
+                            <th scope="col">Catagory</th>
+                            <th scope="col">Storage GB</th>
+                            <th scope="col">Memory MB</th>
+                            <th scope="col">Manufacturer</th>
+                            <th scope="col">Form Factor</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{this.title}}</td>
+                            <td>{{this.descr}}</td>
+                            <td>{{this.orgin}}</td>
+                            <td>{{this.current}}</td>
+                            <th>{{this.catagory}}</th>
+                            <td>{{this.strg_amnt_gb}}</td>
+                            <td>{{this.mem_amnt_mb}}</td>
+                            <td>{{this.mnfctr}}</td>
+                            <td>{{this.frm_fctr}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+
+            </div>
+        </div>
+        {{/each}}
+        <img src="{{send}}" alt="" srcset="">
+        
+    </div>
+</div>
