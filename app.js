@@ -17,7 +17,9 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
 // Static Files
-app.use(express.static('public'));
+//app.use(express.static('public'));
+app.use(express.static(__dirname + "/public"));
+//app.use('/public', express.static(path.join(__dirname, "public")));
 
 // Templateing Engine
 app.engine('hbs', exphbs({extname: '.hbs' }));

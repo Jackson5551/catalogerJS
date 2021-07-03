@@ -26,7 +26,7 @@ exports.view = (req, res) => {
             connection.release();
             if (!err) {
                 let removedItem = req.query.removed;
-                res.render('home', { rows, removedItem});
+                res.render('item-catalog', { rows, removedItem });
             } else {
                 console.log(err);
             }
@@ -49,7 +49,7 @@ exports.find = (req, res) => {
             // Whem done with connection, release it
             connection.release();
             if (!err) {
-                res.render('home', { rows });
+                res.render('item-catalog', { rows });
             } else {
                 console.log(err);
             }
@@ -157,7 +157,7 @@ exports.delete = (req, res) => {
             connection.release();
             if (!err) {
                 let rmovedItem = encodeURIComponent('Item removed.');
-                res.redirect('/?removed=' + rmovedItem);
+                res.redirect('/item-catalog?removed=' + rmovedItem);
             } else {
                 console.log(err);
             }

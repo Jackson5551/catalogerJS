@@ -5,6 +5,19 @@
 </div>
 {{/if}}
 
+<div class="container">
+    <div class="row">
+        <div class="card border-light mb-3">
+            <div class="card-header">Search Item Catalog</div>
+            <div class="card-body">
+                <form class="d-flex" method="POST" action="/item-catalog">
+                    <input class="form-control me-sm-2" type="text" name="search" placeholder="Search">
+                    <button class="btn btn-secondary align-self-center" type="submit">Search</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="row">
     <div class="col-6">
         <h1>Items</h1>
@@ -41,7 +54,7 @@
             {{!-- <td>{{this.descr}}</td> --}}
             <td>{{this.orgin}}</td>
             <td>{{this.current}}</td>
-            <th>{{this.catagory}}</th>
+            <td>{{this.catagory}}</td>
             <td>{{this.strg_amnt_gb}}</td>
             <td>{{this.mem_amnt_mb}}</td>
             <td>{{this.mnfctr}}</td>
