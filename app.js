@@ -16,6 +16,9 @@ app.use(bodyParser.urlencoded({extended: false}));
 // Pass applicaion/json
 app.use(bodyParser.json());
 
+// File Upload
+app.use(fileUpload());
+
 // Static Files
 //app.use(express.static('public'));
 app.use(express.static(__dirname + "/public"));
@@ -25,20 +28,20 @@ app.use(express.static(__dirname + "/public"));
 app.engine('hbs', exphbs({extname: '.hbs' }));
 app.set('view engine', 'hbs');
 
-// Connection Pool
-const pool = mysql.createPool({
-    connectionLimit : 100,
-    host            : process.env.DB_HOST,
-    user            : process.env.DB_USER,
-    password        : process.env.PASS,
-    databse         : process.env.DB_NAME
-});
+// // Connection Pool
+// const pool = mysql.createPool({
+//     connectionLimit : 100,
+//     host            : process.env.DB_HOST,
+//     user            : process.env.DB_USER,
+//     password        : process.env.PASS,
+//     databse         : process.env.DB_NAME
+// });
 
-// Connect to DB
-pool.getConnection((err, connection)=>{
-    if(err) throw err; // not connected
-    console.log('Connected as ID ' + connection.threadId);
-});
+// // Connect to DB
+// pool.getConnection((err, connection)=>{
+//     if(err) throw err; // not connected
+//     console.log('Connected as ID ' + connection.threadId);
+// });
 
 const routes = require('./server/routes/items');
 app.use('/', routes);

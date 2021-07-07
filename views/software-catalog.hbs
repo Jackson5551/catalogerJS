@@ -1,0 +1,69 @@
+{{#if removedSoftware}}
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+    {{removedSoftware}}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{{/if}}
+
+<div class="container">
+    <div class="row">
+        <div class="card border-light mb-3">
+            <div class="card-header">Search Software Catalog</div>
+            <div class="card-body">
+                <form class="d-flex" method="POST" action="/software-catalog">
+                    <input class="form-control me-sm-2" type="text" name="search" placeholder="Search">
+                    <button class="btn btn-secondary align-self-center" type="submit">Search</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-6">
+        <h1>Software</h1>
+    </div>
+    <div class="col-6 d-flex justify-content-end">
+        <a href="/add-software" type="button" class="btn btn-primary align-self-center"><i class="bi bi-plus-lg"></i> Add
+            Software</a>
+    </div>
+</div>
+
+<table class="table table-hover table-bordered">
+    <thead>
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Manufacturer</th>
+            <th scope="col">Version</th>
+            <th scope="col">Format</th>
+            <th scope="col"># of Media</th>
+            <th scope="col">Architecture</th>
+            <th scope="col" class="text-end">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        {{#each rows}}
+
+        <tr>
+            <td>{{this.name}}</td>
+            <td>{{this.mnfctr}}</td>
+            <td>{{this.version}}</td>
+            <td>{{this.format}}</td>
+            <td>{{this.num_of_media}}</td>
+            <td>{{this.architecture}}</td>
+            <td class="text-end">
+                <div>
+                    <a href="/view-software/{{this.id}}" type="button" class="btn btn-light btn-sm mt-1"><i
+                            class="bi bi-eye"></i> View</a>
+                    <a href="/edit-software/{{this.id}}" type="button" class="btn btn-light btn-sm mt-1"><i
+                            class="bi bi-pencil"></i> Edit</a>
+                    <a href="/softwaredel/{{this.id}}" type="button" class="btn btn-danger btn-sm mt-1"><i class="bi bi-trash"></i>
+                        Delete</a>
+                </div>
+            </td>
+        </tr>
+
+        {{/each}}
+
+    </tbody>
+</table>

@@ -1,32 +1,29 @@
-const fileUpload = require('express-fileupload');
 const mysql = require('mysql');
-//const  connect  = require('../routes/items');
+const fileUpload = require('express-fileupload');
 require('dotenv').config();
 
 // Connection Pool
 const pool = mysql.createPool({
     connectionLimit: 100,
-    host: process.env.ITEM_DB_HOST,
-    user: process.env.ITEM_DB_USER,
-    password: process.env.ITEM_DB_PASS,
-    databse: process.env.ITEM_DB_NAME
+    host: process.env.SFTWR_DB_HOST,
+    user: process.env.SFTWR_DB_USER,
+    password: process.env.SFTWR_DB_PASS,
+    databse: process.env.SFTWR_DB_NAME
 });
-console.log(process.env.DB_NAME);
 
-// View users
-exports.view = (req, res) => {
+exports.view = (req, res) =>{
     // Connect to DB
     pool.getConnection((err, connection) => {
         if (err) throw err; // not connected
         console.log('Connected as ID ' + connection.threadId);
         // Use the connection
         connection.query('USE jackson_catalog');
-        connection.query('SELECT * FROM items ORDER BY `catagory` ASC', (err, rows) => {
+        connection.query('SELECT * FROM software ORDER BY `name` ASC', (err, rows) => {
             // Whem done with connection, release it
             connection.release();
             if (!err) {
-                let removedItem = req.query.removed;
-                res.render('item-catalog', { rows, removedItem });
+                let removedSoftware = req.query.removed;
+                res.render('software-catalog', { rows, removedSoftware });
             } else {
                 console.log(err);
             }
@@ -45,11 +42,11 @@ exports.find = (req, res) => {
 
         // Use the connection
         connection.query('USE jackson_catalog');
-        connection.query('SELECT * FROM items WHERE title LIKE ? OR descr LIKE ? OR mnfctr LIKE ?', ['%' + searchTerm + '%', '%' + searchTerm + '%', '%' + searchTerm + '%'], (err, rows) => {
+        connection.query('SELECT * FROM software WHERE name LIKE ? OR mnfctr LIKE ? OR version LIKE ?', ['%' + searchTerm + '%', '%' + searchTerm + '%', '%' + searchTerm + '%'], (err, rows) => {
             // Whem done with connection, release it
             connection.release();
             if (!err) {
-                res.render('item-catalog', { rows });
+                res.render('software-catalog', { rows });
             } else {
                 console.log(err);
             }
@@ -58,14 +55,14 @@ exports.find = (req, res) => {
     });
 }
 
-exports.form = (req, res) =>{
-    res.render('add-item');
+exports.form = (req, res) => {
+    res.render('add-software');
 }
 
 // add new item
 exports.create = (req, res) => {
 
-    const { title, descr, orgin, current, catagory, strg_amnt_gb, mem_amnt_mb, mnfctr, frm_fctr } = req.body;
+    const { name, mnfctr, version, format, num_of_media, architecture, prod_key } = req.body;
 
     pool.getConnection((err, connection) => {
         if (err) throw err; // not connected
@@ -75,11 +72,11 @@ exports.create = (req, res) => {
 
         // Use the connection
         connection.query('USE jackson_catalog');
-        connection.query('INSERT INTO items SET title = ?, descr = ?, orgin = ?, current = ?, catagory = ?, strg_amnt_gb = ?, mem_amnt_mb = ?, mnfctr = ?, frm_fctr = ?', [title, descr, orgin, current, catagory, strg_amnt_gb, mem_amnt_mb, mnfctr, frm_fctr], (err, rows) => {
+        connection.query('INSERT INTO software SET name = ?, mnfctr = ?, version = ?, format = ?, num_of_media = ?, architecture = ?, prod_key = ?', [name, mnfctr, version, format, num_of_media, architecture, prod_key], (err, rows) => {
             // Whem done with connection, release it
             connection.release();
             if (!err) {
-                res.render('add-item', { alert: `${title} has been added successfully.`});
+                res.render('add-software', { alert: `${name} has been added successfully.` });
             } else {
                 console.log(err);
             }
@@ -95,11 +92,11 @@ exports.edit = (req, res) => {
         console.log('Connected as ID ' + connection.threadId);
         // Use the connection
         connection.query('USE jackson_catalog');
-        connection.query('SELECT * FROM items WHERE id = ?', [req.params.id], (err, rows) => {
+        connection.query('SELECT * FROM software WHERE id = ?', [req.params.id], (err, rows) => {
             // Whem done with connection, release it
             connection.release();
             if (!err) {
-                res.render('edit-item', { rows });
+                res.render('edit-software', { rows });
             } else {
                 console.log(err);
             }
@@ -108,16 +105,15 @@ exports.edit = (req, res) => {
     });
 };
 
-//Update item
 exports.update = (req, res) => {
-    const { title, descr, orgin, current, catagory, strg_amnt_gb, mem_amnt_mb, mnfctr, frm_fctr } = req.body;
+    const { name, mnfctr, version, format, num_of_media, architecture, prod_key } = req.body;
 
     pool.getConnection((err, connection) => {
         if (err) throw err; // not connected
         console.log('Connected as ID ' + connection.threadId);
         // Use the connection
         connection.query('USE jackson_catalog');
-        connection.query('UPDATE items SET title = ?, descr = ?, orgin = ?, current = ?, catagory = ?, strg_amnt_gb = ?, mem_amnt_mb = ?, mnfctr = ?, frm_fctr = ? WHERE id = ?', [title, descr, orgin, current, catagory, strg_amnt_gb, mem_amnt_mb, mnfctr, frm_fctr, req.params.id], (err, rows) => {
+        connection.query('UPDATE software SET name = ?, mnfctr = ?, version = ?, format = ?, num_of_media = ?, architecture = ?, prod_key = ?', [name, mnfctr, version, format, num_of_media, architecture, prod_key], (err, rows) => {
             // Whem done with connection, release it
             connection.release();
             if (!err) {
@@ -126,11 +122,11 @@ exports.update = (req, res) => {
                     console.log('Connected as ID ' + connection.threadId);
                     // Use the connection
                     connection.query('USE jackson_catalog');
-                    connection.query('SELECT * FROM items WHERE id = ?', [req.params.id], (err, rows) => {
+                    connection.query('SELECT * FROM software WHERE id = ?', [req.params.id], (err, rows) => {
                         // Whem done with connection, release it
                         connection.release();
                         if (!err) {
-                            res.render('edit-item', { rows, alert: `${title} has been updated.` });
+                            res.render('edit-software', { rows, alert: `${name} has been updated.` });
                         } else {
                             console.log(err);
                         }
@@ -152,12 +148,12 @@ exports.delete = (req, res) => {
         console.log('Connected as ID ' + connection.threadId);
         // Use the connection
         connection.query('USE jackson_catalog');
-        connection.query('DELETE FROM items WHERE id = ?', [req.params.id], (err, rows) => {
+        connection.query('DELETE FROM software WHERE id = ?', [req.params.id], (err, rows) => {
             // Whem done with connection, release it
             connection.release();
             if (!err) {
-                let rmovedItem = encodeURIComponent('Item removed.');
-                res.redirect('/item-catalog?removed=' + rmovedItem);
+                let removedSoftware = encodeURIComponent('Item removed.');
+                res.redirect('/software-catalog?removed=' + removedSoftware);
             } else {
                 console.log(err);
             }
@@ -166,7 +162,6 @@ exports.delete = (req, res) => {
     });
 };
 
-// View items
 exports.viewall = (req, res) => {
     // Connect to DB
     pool.getConnection((err, connection) => {
@@ -174,24 +169,24 @@ exports.viewall = (req, res) => {
         //console.log('Connected as ID ' + connection.threadId);
         // Use the connection
         connection.query('USE jackson_catalog');
-        connection.query('SELECT * FROM items WHERE id = ?', [req.params.id], (err, rows) => {
+        connection.query('SELECT * FROM software WHERE id = ?', [req.params.id], (err, rows) => {
             // Whem done with connection, release it
             connection.release();
             if (!err) {
-                try{
+                try {
                     var blob = rows[0]["image"];
                     var base = Buffer.from(blob);
                     var conversion = base.toString('base64');
                     //var send = 'data:image;base64,'+conversion+'';
                     var send = 'data:image/png;base64,' + conversion + '';
                     //console.log(conversion);
-                    res.render('view-item', { rows, send });
+                    res.render('view-software', { rows, send });
                 } catch {
                     send = ""
-                    res.render('view-item', { rows, send });
+                    res.render('view-software', { rows, send });
                 } finally {
                     send = ""
-                    res.render('view-item', { rows, send });
+                    res.render('view-software', { rows, send });
                 }
             } else {
                 console.log(err);
