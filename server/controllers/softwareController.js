@@ -1,5 +1,6 @@
 const mysql = require('mysql');
 const fileUpload = require('express-fileupload');
+const fs = require('fs');
 require('dotenv').config();
 
 // Connection Pool
@@ -11,7 +12,9 @@ const pool = mysql.createPool({
     databse: process.env.SFTWR_DB_NAME
 });
 
-exports.view = (req, res) =>{
+//====================================================================================================================================
+
+exports.view = (req, res) => {
     // Connect to DB
     pool.getConnection((err, connection) => {
         if (err) throw err; // not connected
@@ -31,6 +34,8 @@ exports.view = (req, res) =>{
         });
     });
 };
+
+//====================================================================================================================================
 
 // Find Item by search
 exports.find = (req, res) => {
@@ -55,6 +60,8 @@ exports.find = (req, res) => {
     });
 }
 
+//====================================================================================================================================
+
 exports.form = (req, res) => {
     res.render('add-software');
 }
@@ -68,22 +75,49 @@ exports.create = (req, res) => {
         if (err) throw err; // not connected
         console.log('Connected as ID ' + connection.threadId);
 
-        let searchTerm = req.body.search;
+        let sampleFile;
+        let uploadPath;
 
-        // Use the connection
-        connection.query('USE jackson_catalog');
-        connection.query('INSERT INTO software SET name = ?, mnfctr = ?, version = ?, format = ?, num_of_media = ?, architecture = ?, prod_key = ?', [name, mnfctr, version, format, num_of_media, architecture, prod_key], (err, rows) => {
-            // Whem done with connection, release it
-            connection.release();
-            if (!err) {
-                res.render('add-software', { alert: `${name} has been added successfully.` });
-            } else {
-                console.log(err);
-            }
-            //console.log('The data from table: \n', rows);
+        if (!req.files || Object.keys(req.files).length === 0) {
+            return res.status(400).send('No files were uploaded.');
+        }
+
+        sampleFile = req.files.itemImage;
+        uploadPath = '.' + '/upload/' + sampleFile.name;
+
+        // console.log(sampleFile);
+        // console.log(uploadPath);
+
+        sampleFile.mv(uploadPath, function (err) {
+            if (err) return res.status(500).send(err);
+
+            const data = readImageFile(uploadPath);
+
+            // Use the connection
+            connection.query('USE jackson_catalog');
+            connection.query('INSERT INTO software SET name = ?, mnfctr = ?, version = ?, format = ?, num_of_media = ?, architecture = ?, prod_key = ?, image = BINARY(?)', [name, mnfctr, version, format, num_of_media, architecture, prod_key, data], (err, rows) => {
+                id = req.params.id
+                //connection.query("INSERT INTO `software`(image) VALUES(BINARY(:data)) WHERE id = :id", { data, id});
+                // Whem done with connection, release it
+                connection.release();
+                if (!err) {
+                    res.render('add-software', { alert: `${name} has been added successfully.` });
+                } else {
+                    console.log(err);
+                }
+                //console.log('The data from table: \n', rows);
+            });
         });
     });
 }
+
+function readImageFile(file) {
+    // read binary data from a file:
+    const bitmap = fs.readFileSync(file);
+    const buf = new Buffer(bitmap);
+    return buf;
+}
+//====================================================================================================================================
 
 // Edit items
 exports.edit = (req, res) => {
@@ -141,6 +175,8 @@ exports.update = (req, res) => {
     });
 };
 
+//====================================================================================================================================
+
 // Delete item
 exports.delete = (req, res) => {
     pool.getConnection((err, connection) => {
@@ -161,6 +197,8 @@ exports.delete = (req, res) => {
         });
     });
 };
+
+//====================================================================================================================================
 
 exports.viewall = (req, res) => {
     // Connect to DB
@@ -195,3 +233,5 @@ exports.viewall = (req, res) => {
         });
     });
 };
+
+//====================================================================================================================================

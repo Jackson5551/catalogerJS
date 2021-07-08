@@ -36,8 +36,8 @@
                                 <div>
                                     <a href="/edit-software/{{this.id}}" type="button"
                                         class="btn btn-light btn-sm mt-1"><i class="bi bi-pencil"></i> Edit</a>
-                                    <a href="/softwaredel/{{this.id}}" type="button" class="btn btn-danger btn-sm mt-1"><i
-                                            class="bi bi-trash"></i>
+                                    <a href="/softwaredel/{{this.id}}" type="button"
+                                        class="btn btn-danger btn-sm mt-1"><i class="bi bi-trash"></i>
                                         Delete</a>
                                 </div>
                             </td>
@@ -49,7 +49,12 @@
             </div>
         </div>
         {{/each}}
-        <img src="{{send}}" alt="" srcset="">
+        <div>
+            <h6>Software Image (If avalable): </h6>
+            <img src="{{send}}" alt="No Image Avalable" srcset=""
+                class="img-fluid rounded mx-auto d-block img-thumbnail">
+        </div>
+
 
     </div>
 </div>

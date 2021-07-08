@@ -58,7 +58,7 @@ exports.find = (req, res) => {
     });
 }
 
-exports.form = (req, res) =>{
+exports.form = (req, res) => {
     res.render('add-item');
 }
 
@@ -71,21 +71,42 @@ exports.create = (req, res) => {
         if (err) throw err; // not connected
         console.log('Connected as ID ' + connection.threadId);
 
-        let searchTerm = req.body.search;
+        let sampleFile;
+        let uploadPath;
 
-        // Use the connection
-        connection.query('USE jackson_catalog');
-        connection.query('INSERT INTO items SET title = ?, descr = ?, orgin = ?, current = ?, catagory = ?, strg_amnt_gb = ?, mem_amnt_mb = ?, mnfctr = ?, frm_fctr = ?', [title, descr, orgin, current, catagory, strg_amnt_gb, mem_amnt_mb, mnfctr, frm_fctr], (err, rows) => {
-            // Whem done with connection, release it
-            connection.release();
-            if (!err) {
-                res.render('add-item', { alert: `${title} has been added successfully.`});
-            } else {
-                console.log(err);
-            }
-            //console.log('The data from table: \n', rows);
+        if (!req.files || Object.keys(req.files).length === 0) {
+            return res.status(400).send('No files were uploaded.');
+        }
+
+        sampleFile = req.files.softwareImage;
+        uploadPath = '.' + '/upload/' + sampleFile.name;
+
+        sampleFile.mv(uploadPath, function (err) {
+            if (err) return res.status(500).send(err);
+
+            const data = readImageFile(uploadPath);
+
+            // Use the connection
+            connection.query('USE jackson_catalog');
+            connection.query('INSERT INTO items SET title = ?, descr = ?, orgin = ?, current = ?, catagory = ?, strg_amnt_gb = ?, mem_amnt_mb = ?, mnfctr = ?, frm_fctr = ?, image = BINARY(?)', [title, descr, orgin, current, catagory, strg_amnt_gb, mem_amnt_mb, mnfctr, frm_fctr, data], (err, rows) => {
+                // Whem done with connection, release it
+                connection.release();
+                if (!err) {
+                    res.render('add-item', { alert: `${title} has been added successfully.` });
+                } else {
+                    console.log(err);
+                }
+                //console.log('The data from table: \n', rows);
+            });
         });
     });
+}
+
+function readImageFile(file) {
+    // read binary data from a file:
+    const bitmap = fs.readFileSync(file);
+    const buf = new Buffer(bitmap);
+    return buf;
 }
 
 // Edit items
@@ -178,7 +199,7 @@ exports.viewall = (req, res) => {
             // Whem done with connection, release it
             connection.release();
             if (!err) {
-                try{
+                try {
                     var blob = rows[0]["image"];
                     var base = Buffer.from(blob);
                     var conversion = base.toString('base64');
