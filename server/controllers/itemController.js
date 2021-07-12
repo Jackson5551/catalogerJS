@@ -1,6 +1,6 @@
 const fileUpload = require('express-fileupload');
+const fs = require('fs');
 const mysql = require('mysql');
-//const  connect  = require('../routes/items');
 require('dotenv').config();
 
 // Connection Pool
@@ -11,7 +11,6 @@ const pool = mysql.createPool({
     password: process.env.ITEM_DB_PASS,
     databse: process.env.ITEM_DB_NAME
 });
-console.log(process.env.DB_NAME);
 
 //====================================================================================================================================
 
@@ -71,7 +70,7 @@ exports.form = (req, res) => {
 // add new item
 exports.create = (req, res) => {
 
-    const { title, descr, orgin, current, catagory, strg_amnt_gb, mem_amnt_mb, mnfctr, frm_fctr } = req.body;
+    const { title, descr, orgin, current, catagory, strg_amnt_gb, mem_amnt_mb, mnfctr, frm_fctr, part_num, serial_num } = req.body;
 
     pool.getConnection((err, connection) => {
         if (err) throw err; // not connected
@@ -84,7 +83,7 @@ exports.create = (req, res) => {
             return res.status(400).send('No files were uploaded.');
         }
 
-        sampleFile = req.files.softwareImage;
+        sampleFile = req.files.itemImage;
         uploadPath = '.' + '/upload/' + sampleFile.name;
 
         sampleFile.mv(uploadPath, function (err) {
@@ -94,7 +93,7 @@ exports.create = (req, res) => {
 
             // Use the connection
             connection.query('USE jackson_catalog');
-            connection.query('INSERT INTO items SET title = ?, descr = ?, orgin = ?, current = ?, catagory = ?, strg_amnt_gb = ?, mem_amnt_mb = ?, mnfctr = ?, frm_fctr = ?, image = BINARY(?)', [title, descr, orgin, current, catagory, strg_amnt_gb, mem_amnt_mb, mnfctr, frm_fctr, data], (err, rows) => {
+            connection.query('INSERT INTO items SET title = ?, descr = ?, orgin = ?, current = ?, catagory = ?, strg_amnt_gb = ?, mem_amnt_mb = ?, mnfctr = ?, frm_fctr = ?, image = BINARY(?), part_num = ?, serial_num = ?', [title, descr, orgin, current, catagory, strg_amnt_gb, mem_amnt_mb, mnfctr, frm_fctr, data, part_num, serial_num], (err, rows) => {
                 // Whem done with connection, release it
                 connection.release();
                 if (!err) {
@@ -139,38 +138,92 @@ exports.edit = (req, res) => {
 
 //Update item
 exports.update = (req, res) => {
-    const { title, descr, orgin, current, catagory, strg_amnt_gb, mem_amnt_mb, mnfctr, frm_fctr } = req.body;
+    const { title, descr, orgin, current, catagory, strg_amnt_gb, mem_amnt_mb, mnfctr, frm_fctr, itemImage, part_num, serial_num } = req.body;
 
     pool.getConnection((err, connection) => {
         if (err) throw err; // not connected
         console.log('Connected as ID ' + connection.threadId);
-        // Use the connection
-        connection.query('USE jackson_catalog');
-        connection.query('UPDATE items SET title = ?, descr = ?, orgin = ?, current = ?, catagory = ?, strg_amnt_gb = ?, mem_amnt_mb = ?, mnfctr = ?, frm_fctr = ? WHERE id = ?', [title, descr, orgin, current, catagory, strg_amnt_gb, mem_amnt_mb, mnfctr, frm_fctr, req.params.id], (err, rows) => {
-            // Whem done with connection, release it
-            connection.release();
-            if (!err) {
-                pool.getConnection((err, connection) => {
-                    if (err) throw err; // not connected
-                    console.log('Connected as ID ' + connection.threadId);
-                    // Use the connection
-                    connection.query('USE jackson_catalog');
-                    connection.query('SELECT * FROM items WHERE id = ?', [req.params.id], (err, rows) => {
-                        // Whem done with connection, release it
-                        connection.release();
-                        if (!err) {
-                            res.render('edit-item', { rows, alert: `${title} has been updated.` });
-                        } else {
-                            console.log(err);
-                        }
-                        //console.log('The data from table: \n', rows);
+
+        let sampleFile;
+        let uploadPath;
+
+        if (!req.files || Object.keys(req.files).length === 0) {
+            connection.query('UPDATE items SET title = ?, descr = ?, orgin = ?, current = ?, catagory = ?, strg_amnt_gb = ?, mem_amnt_mb = ?, mnfctr = ?, frm_fctr = ?, part_num = ?, serial_num = ? WHERE id = ?', [title, descr, orgin, current, catagory, strg_amnt_gb, mem_amnt_mb, mnfctr, frm_fctr, part_num, serial_num, req.params.id], (err, rows) => {
+                // Whem done with connection, release it
+                connection.release();
+                if (!err) {
+                    pool.getConnection((err, connection) => {
+                        if (err) throw err; // not connected
+                        console.log('Connected as ID ' + connection.threadId);
+                        // Use the connection
+                        connection.query('USE jackson_catalog');
+                        connection.query('SELECT * FROM items WHERE id = ?', [req.params.id], (err, rows) => {
+                            // Whem done with connection, release it
+                            connection.release();
+                            if (!err) {
+                                res.render('edit-item', { rows, alert: `${title} has been updated.` });
+                            } else {
+                                console.log(err);
+                            }
+                            //console.log('The data from table: \n', rows);
+                        });
                     });
+                } else {
+                    console.log(err);
+                }
+                //console.log('The data from table: \n', rows);
+            });
+        } else {
+            console.log("Image")
+            sampleFile = req.files.itemImage;
+            uploadPath = '.' + '/upload/' + sampleFile.name;
+
+            sampleFile.mv(uploadPath, function (err) {
+                if (err) return res.status(500).send(err);
+
+                const data = readImageFile(uploadPath);
+
+                // Use the connection
+                connection.query('USE jackson_catalog');
+                connection.query('UPDATE items SET title = ?, descr = ?, orgin = ?, current = ?, catagory = ?, strg_amnt_gb = ?, mem_amnt_mb = ?, mnfctr = ?, frm_fctr = ?, image = BINARY(?), part_num = ?, serial_num = ? WHERE id = ?', [title, descr, orgin, current, catagory, strg_amnt_gb, mem_amnt_mb, mnfctr, frm_fctr, data, part_num, serial_num, req.params.id], (err, rows) => {
+                    console.log(err);
+                    // Whem done with connection, release it
+                    connection.release();
+                    if (!err) {
+                        pool.getConnection((err, connection) => {
+                            if (err) throw err; // not connected
+                            console.log('Connected as ID ' + connection.threadId);
+
+                            sampleFile = req.files.itemImage;
+                            uploadPath = '.' + '/upload/' + sampleFile.name;
+
+                            sampleFile.mv(uploadPath, function (err) {
+                                if (err) return res.status(500).send(err);
+
+                                const data = readImageFile(uploadPath);
+
+                                // Use the connection
+                                connection.query('USE jackson_catalog');
+                                connection.query('SELECT * FROM items WHERE id = ?', [req.params.id], (err, rows) => {
+                                    // Whem done with connection, release it
+                                    connection.release();
+                                    if (!err) {
+                                        res.render('edit-item', { rows, alert: `${title} has been updated.` });
+                                    } else {
+                                        console.log(err);
+                                    }
+                                    //console.log('The data from table: \n', rows);
+                                });
+                            });
+                        });
+                    } else {
+                        console.log(err);
+                    }
+                    //console.log('The data from table: \n', rows);
                 });
-            } else {
-                console.log(err);
-            }
-            //console.log('The data from table: \n', rows);
-        });
+
+            });
+        }
     });
 };
 

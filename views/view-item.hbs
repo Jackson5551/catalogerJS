@@ -10,7 +10,7 @@
         {{#each rows}}
         <div class="row">
             <div class="col">
-                <table class="table">
+                {{!-- <table class="table">
                     <thead>
                         <tr>
                             <th scope="col">Title</th>
@@ -48,15 +48,48 @@
                             </td>
                         </tr>
                     </tbody>
-                </table>
+                </table>--}}
+
+                <div class="card mb-3">
+                    <h3 class="card-header">{{this.title}}</h3>
+                    <div class="card-body">
+                        <p class="card-text">{{this.descr}}</p>
+                    </div>
+                    {{!-- <div class="card-body">
+                    </div> --}}
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item text-primary">Manufacturer: <strong>{{this.mnfctr}}</strong></li>
+                        <li class="list-group-item text-primary">Catagory: <strong>{{this.catagory}}</strong></li>
+                        <li class="list-group-item text-primary">Form Factor: <strong>{{this.frm_fctr}}</strong></li>
+                        <li class="list-group-item text-primary">Storage Amount GB: <strong>{{this.strg_amnt_gb}}</strong></li>
+                        <li class="list-group-item text-primary">Memory Amount MB: <strong>{{this.mem_amnt_mb}}</strong></li>
+                        <li class="list-group-item text-primary">Orgin: <strong>{{this.orgin}}</strong></li>
+                        <li class="list-group-item text-primary">Current: <strong>{{this.current}}</strong></li>
+                    </ul>
+                    <div class="card-body">
+                        <a href="/edit-item/{{this.id}}" type="button" class="btn btn-warning btn-sm"><i
+                                class="bi bi-pencil"></i>
+                            Edit</a>
+                        <a href="/{{this.id}}" type="button" class="btn btn-danger btn-sm"><i class="bi bi-trash"></i>
+                            Delete</a>
+                    </div>
+                    <div class="card-footer text-muted">
+                        Part Number: <strong>{{this.part_num}}</strong> | Serial Number: <strong>{{this.serial_num}}</strong>
+                    </div>
+                </div>
+
 
 
             </div>
         </div>
         {{/each}}
-        <div>
-            <h6>Item Image (If avalable): </h6>
-            <img src="{{send}}" alt="No Image Avalable" srcset="" class="img-fluid rounded mx-auto d-block img-thumbnail">
+        <div class="card mb-3">
+            <h6 class="card-header">Item Image (If avalable): </h6>
+            <img src="{{send}}" alt="No Image Avalable" srcset=""
+                class="img-fluid mx-auto d-block">
+            <div class="card-footer">
+                <p></p>
+            </div>
         </div>
 
     </div>

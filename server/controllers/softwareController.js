@@ -78,24 +78,10 @@ exports.create = (req, res) => {
         let sampleFile;
         let uploadPath;
 
+        console.log("File Stuff: ", req.files);
         if (!req.files || Object.keys(req.files).length === 0) {
-            return res.status(400).send('No files were uploaded.');
-        }
-
-        sampleFile = req.files.itemImage;
-        uploadPath = '.' + '/upload/' + sampleFile.name;
-
-        // console.log(sampleFile);
-        // console.log(uploadPath);
-
-        sampleFile.mv(uploadPath, function (err) {
-            if (err) return res.status(500).send(err);
-
-            const data = readImageFile(uploadPath);
-
-            // Use the connection
             connection.query('USE jackson_catalog');
-            connection.query('INSERT INTO software SET name = ?, mnfctr = ?, version = ?, format = ?, num_of_media = ?, architecture = ?, prod_key = ?, image = BINARY(?)', [name, mnfctr, version, format, num_of_media, architecture, prod_key, data], (err, rows) => {
+            connection.query('INSERT INTO software SET name = ?, mnfctr = ?, version = ?, format = ?, num_of_media = ?, architecture = ?, prod_key = ?', [name, mnfctr, version, format, num_of_media, architecture, prod_key], (err, rows) => {
                 id = req.params.id
                 //connection.query("INSERT INTO `software`(image) VALUES(BINARY(:data)) WHERE id = :id", { data, id});
                 // Whem done with connection, release it
@@ -107,7 +93,35 @@ exports.create = (req, res) => {
                 }
                 //console.log('The data from table: \n', rows);
             });
-        });
+        } else {
+
+            sampleFile = req.files.softwareImage;
+            uploadPath = '.' + '/upload/' + sampleFile.name;
+
+            // console.log(sampleFile);
+            // console.log(uploadPath);
+
+            sampleFile.mv(uploadPath, function (err) {
+                if (err) return res.status(500).send(err);
+
+                const data = readImageFile(uploadPath);
+
+                // Use the connection
+                connection.query('USE jackson_catalog');
+                connection.query('INSERT INTO software SET name = ?, mnfctr = ?, version = ?, format = ?, num_of_media = ?, architecture = ?, prod_key = ?, image = BINARY(?)', [name, mnfctr, version, format, num_of_media, architecture, prod_key, data], (err, rows) => {
+                    id = req.params.id
+                    //connection.query("INSERT INTO `software`(image) VALUES(BINARY(:data)) WHERE id = :id", { data, id});
+                    // Whem done with connection, release it
+                    connection.release();
+                    if (!err) {
+                        res.render('add-software', { alert: `${name} has been added successfully.` });
+                    } else {
+                        console.log(err);
+                    }
+                    //console.log('The data from table: \n', rows);
+                });
+            });
+        }
     });
 }
 
@@ -141,37 +155,90 @@ exports.edit = (req, res) => {
 
 exports.update = (req, res) => {
     const { name, mnfctr, version, format, num_of_media, architecture, prod_key } = req.body;
-
+    console.log(req.body)
     pool.getConnection((err, connection) => {
         if (err) throw err; // not connected
         console.log('Connected as ID ' + connection.threadId);
-        // Use the connection
-        connection.query('USE jackson_catalog');
-        connection.query('UPDATE software SET name = ?, mnfctr = ?, version = ?, format = ?, num_of_media = ?, architecture = ?, prod_key = ?', [name, mnfctr, version, format, num_of_media, architecture, prod_key], (err, rows) => {
-            // Whem done with connection, release it
-            connection.release();
-            if (!err) {
-                pool.getConnection((err, connection) => {
-                    if (err) throw err; // not connected
-                    console.log('Connected as ID ' + connection.threadId);
-                    // Use the connection
-                    connection.query('USE jackson_catalog');
-                    connection.query('SELECT * FROM software WHERE id = ?', [req.params.id], (err, rows) => {
-                        // Whem done with connection, release it
-                        connection.release();
-                        if (!err) {
-                            res.render('edit-software', { rows, alert: `${name} has been updated.` });
-                        } else {
-                            console.log(err);
-                        }
-                        //console.log('The data from table: \n', rows);
+
+        console.log("File Stuff: ", req.files);
+        console.log("File Stuff: ", req.params.id);
+
+            let sampleFile;
+            let uploadPath;
+
+        if (!req.files || Object.keys(req.files).length === 0) {
+            console.log('No Image')
+            // Use the connection
+            connection.query('USE jackson_catalog');
+            connection.query('UPDATE software SET name = ?, mnfctr = ?, version = ?, format = ?, num_of_media = ?, architecture = ?, prod_key = ? WHERE id = ?', [name, mnfctr, version, format, num_of_media, architecture, prod_key, req.params.id], (err, rows) => {
+                // Whem done with connection, release it
+                connection.release();
+                if (!err) {
+                    pool.getConnection((err, connection) => {
+                        if (err) throw err; // not connected
+                        console.log('Connected as ID ' + connection.threadId);
+                        // Use the connection
+                        connection.query('USE jackson_catalog');
+                        connection.query('SELECT * FROM software WHERE id = ?', [req.params.id], (err, rows) => {
+                            // Whem done with connection, release it
+                            connection.release();
+                            if (!err) {
+                                console.log(rows);
+                                res.render('edit-software', { rows, alert: `${name} has been updated.` });
+                            } else {
+                                console.log(err);
+                            }
+                            //console.log('The data from table: \n', rows);
+                        });
                     });
+                };
+            });
+        } else {
+            console.log('Image')
+            sampleFile = req.files.softwareImage;
+            uploadPath = '.' + '/upload/' + sampleFile.name;
+
+            // console.log(sampleFile);
+            // console.log(uploadPath);
+
+            sampleFile.mv(uploadPath, function (err) {
+                if (err) return res.status(500).send(err);
+                console.log('Before Read')
+                const data = readImageFile(uploadPath);
+                console.log('After Read')
+                // Use the connection
+                connection.query('USE jackson_catalog');
+                connection.query('UPDATE software SET name = ?, mnfctr = ?, version = ?, format = ?, num_of_media = ?, architecture = ?, image = BINARY(?), prod_key = ? WHERE id = ?', [name, mnfctr, version, format, num_of_media, architecture, data, prod_key, req.params.id], (err, rows) => {
+                    // Whem done with connection, release it
+                    console.log('After Insert')
+                    connection.release();
+                    console.log('After Relase')
+                    if (!err) {
+                        pool.getConnection((err, connection) => {
+                            if (err) throw err; // not connected
+                            console.log('Connected as ID ' + connection.threadId);
+                            console.log('ID: ', req.params.id)
+                            // Use the connection
+                            connection.query('USE jackson_catalog');
+                            connection.query('SELECT * FROM software WHERE id = ?', [req.params.id], (err, rows) => {
+                                // Whem done with connection, release it
+                                connection.release();
+                                if (!err) {
+                                    console.log('The data from table: \n', rows);
+                                    res.render('edit-software', { rows, alert: `${name} has been updated.` });
+                                } else {
+                                    console.log(err);
+                                }
+                                console.log('The data from table: \n', rows);
+                            });
+                            console.log('After submission')
+                        });
+                    } else {
+                        console.log(err);
+                    }
                 });
-            } else {
-                console.log(err);
-            }
-            //console.log('The data from table: \n', rows);
-        });
+            });
+        };
     });
 };
 

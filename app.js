@@ -3,6 +3,7 @@ const exphbs = require('express-handlebars');
 const bodyParser = require('body-parser');
 const mysql = require('mysql');
 const fileUpload = require('express-fileupload');
+const multer = require('multer');
 
 require('dotenv').config();
 
@@ -19,10 +20,11 @@ app.use(bodyParser.json());
 // File Upload
 app.use(fileUpload());
 
+
 // Static Files
 //app.use(express.static('public'));
 app.use(express.static(__dirname + "/public"));
-app.use(express.static('upload'));
+app.use(express.static(__dirname + '/upload'));
 //app.use('/public', express.static(path.join(__dirname, "public")));
 
 // Templateing Engine
