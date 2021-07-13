@@ -1,0 +1,38 @@
+<!-- Modal -->
+<div class="modal fade" id="exampleModal{{this.id}}" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Delete Item?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this entry:
+                <br />
+                <strong>{{this.title}}</strong>
+                <br />
+                <strong>{{this.descr}}</strong>
+                <br />
+                <strong>{{this.catagory}}</strong>
+                <br />
+                <strong>{{this.strg_amnt_gb}}</strong>
+                <br />
+                <strong>{{this.mem_amnt_mb}}</strong>
+                <br />
+                <strong>{{this.mnfctr}}</strong>
+                <br />
+                <strong>{{this.frm_fctr}}</strong>
+                <br />
+                <strong>{{this.part_num}}</strong>
+                <br />
+                <strong>{{this.serial_num}}</strong>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <a href="/itemdel/{{this.id}}" type="button" class="btn btn-danger"><i class="bi bi-trash"></i>
+                    Delete</a>
+            </div>
+        </div>
+    </div>
+</div>

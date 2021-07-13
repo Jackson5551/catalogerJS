@@ -1,0 +1,67 @@
+<!-- Modal -->
+<div class="modal fade" id="softeditmodal{{this.id}}" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Edit Software</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form class="row g-3 needs-validation mt-3" method="POST" action="/edit-software/{{this.id}}"
+                encType="multipart/form-data">
+                <div class="container mb-3">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="floatingInput" placeholder="Name" name="name"
+                            value="{{this.name}}">
+                        <label for="floatingInput">Name</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="floatingInput" placeholder="Manufacturer"
+                            name="mnfctr" value="{{this.mnfctr}}">
+                        <label for="floatingInput">Manufacturer</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="floatingInput" placeholder="Version" name="version"
+                            value="{{this.version}}">
+                        <label for="floatingInput">Version</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="floatingInput" placeholder="Format" name="format"
+                            value="{{this.format}}">
+                        <label for="floatingInput">Format</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="floatingInput" placeholder="Number of Media"
+                            name="num_of_media" value="{{this.num_of_media}}">
+                        <label for="floatingInput">Number of Media</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="floatingInput" placeholder="Architecture"
+                            name="architecture" value="{{this.architecture}}">
+                        <label for="floatingInput">Architecture</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="floatingInput" placeholder="Catagory"
+                            name="catagory" value="{{this.catagory}}">
+                        <label for="floatingInput">Catagory</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="floatingInput" placeholder="Product Key"
+                            name="prod_key" value="{{this.prod_key}}">
+                        <label for="floatingInput">Product Key</label>
+                    </div>
+                    <label for="inputGroupFile04">Choose an image</label>
+                    <div class="input-group">
+                        <input type="file" class="form-control" id="inputGroupFile04"
+                            aria-describedby="inputGroupFileAddon04" aria-label="Upload" name="softwareImage">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <a href="" type="button" class="btn btn-warning"></i>
+                        Submit</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

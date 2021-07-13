@@ -21,7 +21,7 @@ exports.view = (req, res) => {
         console.log('Connected as ID ' + connection.threadId);
         // Use the connection
         connection.query('USE jackson_catalog');
-        connection.query('SELECT * FROM software ORDER BY `name` ASC', (err, rows) => {
+        connection.query('SELECT * FROM software ORDER BY `catagory` ASC', (err, rows) => {
             // Whem done with connection, release it
             connection.release();
             if (!err) {
@@ -69,7 +69,7 @@ exports.form = (req, res) => {
 // add new item
 exports.create = (req, res) => {
 
-    const { name, mnfctr, version, format, num_of_media, architecture, prod_key } = req.body;
+    const { name, mnfctr, version, format, num_of_media, architecture, catagory, prod_key } = req.body;
 
     pool.getConnection((err, connection) => {
         if (err) throw err; // not connected
@@ -81,7 +81,7 @@ exports.create = (req, res) => {
         console.log("File Stuff: ", req.files);
         if (!req.files || Object.keys(req.files).length === 0) {
             connection.query('USE jackson_catalog');
-            connection.query('INSERT INTO software SET name = ?, mnfctr = ?, version = ?, format = ?, num_of_media = ?, architecture = ?, prod_key = ?', [name, mnfctr, version, format, num_of_media, architecture, prod_key], (err, rows) => {
+            connection.query('INSERT INTO software SET name = ?, mnfctr = ?, version = ?, format = ?, num_of_media = ?, architecture = ?, catagory = ?, prod_key = ?', [name, mnfctr, version, format, num_of_media, architecture, catagory, prod_key], (err, rows) => {
                 id = req.params.id
                 //connection.query("INSERT INTO `software`(image) VALUES(BINARY(:data)) WHERE id = :id", { data, id});
                 // Whem done with connection, release it
@@ -108,7 +108,7 @@ exports.create = (req, res) => {
 
                 // Use the connection
                 connection.query('USE jackson_catalog');
-                connection.query('INSERT INTO software SET name = ?, mnfctr = ?, version = ?, format = ?, num_of_media = ?, architecture = ?, prod_key = ?, image = BINARY(?)', [name, mnfctr, version, format, num_of_media, architecture, prod_key, data], (err, rows) => {
+                connection.query('INSERT INTO software SET name = ?, mnfctr = ?, version = ?, format = ?, num_of_media = ?, architecture = ?, catagory = ?, prod_key = ?, image = BINARY(?)', [name, mnfctr, version, format, num_of_media, architecture, catagory, prod_key, data], (err, rows) => {
                     id = req.params.id
                     //connection.query("INSERT INTO `software`(image) VALUES(BINARY(:data)) WHERE id = :id", { data, id});
                     // Whem done with connection, release it
@@ -154,7 +154,7 @@ exports.edit = (req, res) => {
 };
 
 exports.update = (req, res) => {
-    const { name, mnfctr, version, format, num_of_media, architecture, prod_key } = req.body;
+    const { name, mnfctr, version, format, num_of_media, architecture, catagory, prod_key } = req.body;
     console.log(req.body)
     pool.getConnection((err, connection) => {
         if (err) throw err; // not connected
@@ -170,7 +170,7 @@ exports.update = (req, res) => {
             console.log('No Image')
             // Use the connection
             connection.query('USE jackson_catalog');
-            connection.query('UPDATE software SET name = ?, mnfctr = ?, version = ?, format = ?, num_of_media = ?, architecture = ?, prod_key = ? WHERE id = ?', [name, mnfctr, version, format, num_of_media, architecture, prod_key, req.params.id], (err, rows) => {
+            connection.query('UPDATE software SET name = ?, mnfctr = ?, version = ?, format = ?, num_of_media = ?, architecture = ?, catagory = ?, prod_key = ? WHERE id = ?', [name, mnfctr, version, format, num_of_media, architecture, catagory, prod_key, req.params.id], (err, rows) => {
                 // Whem done with connection, release it
                 connection.release();
                 if (!err) {
@@ -208,7 +208,7 @@ exports.update = (req, res) => {
                 console.log('After Read')
                 // Use the connection
                 connection.query('USE jackson_catalog');
-                connection.query('UPDATE software SET name = ?, mnfctr = ?, version = ?, format = ?, num_of_media = ?, architecture = ?, image = BINARY(?), prod_key = ? WHERE id = ?', [name, mnfctr, version, format, num_of_media, architecture, data, prod_key, req.params.id], (err, rows) => {
+                connection.query('UPDATE software SET name = ?, mnfctr = ?, version = ?, format = ?, num_of_media = ?, architecture = ?, catagory = ?, image = BINARY(?), prod_key = ? WHERE id = ?', [name, mnfctr, version, format, num_of_media, architecture, catagory, data, prod_key, req.params.id], (err, rows) => {
                     // Whem done with connection, release it
                     console.log('After Insert')
                     connection.release();
