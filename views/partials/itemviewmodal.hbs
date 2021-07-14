@@ -1,70 +1,63 @@
-<!-- Modal -->
-<div class="modal fade" id="itemdelmodal{{this.id}}" tabindex="-1" aria-labelledby="exampleModalLabel"
+<div class="modal fade" id="itemviewmodal{{this.id}}" tabindex="-1" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel"><i class="bi bi-exclamation-triangle"></i> Delete Item?
-                </h5>
+                <h5 class="modal-title" id="exampleModalLabel">Quick View</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <strong class="text-danger">Are you sure you want to delete this entry:</strong>
-                <br />
                 <h2><strong>{{this.title}}</strong></h2>
                 <hr />
                 <p class="text-muted">{{this.descr}}</p>
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">
                         Manufacturer
-                        <strong class="text-danger">{{this.mnfctr}}</strong>
-                    </li>
+                        <strong class="text-primary">{{this.mnfctr}}</strong></li>
                     <li class="list-group-item">
                         Catagory
-                        <strong class="text-danger">{{this.catagory}}</strong>
+                        <strong class="text-primary">{{this.catagory}}</strong>
                     </li>
                     <li class="list-group-item">
                         Form Factor
-                        <strong class="text-danger">{{this.frm_fctr}}</strong>
+                        <strong class="text-primary">{{this.frm_fctr}}</strong>
                     </li>
                     <li class="list-group-item">
                         Storage GB
-                        <strong class="text-danger">{{this.strg_amnt_gb}}</strong>
+                        <strong class="text-primary">{{this.strg_amnt_gb}}</strong>
                     </li>
                     <li class="list-group-item">
                         Memory MB
-                        <strong class="text-danger">{{this.mem_amnt_mb}}</strong>
+                        <strong class="text-primary">{{this.mem_amnt_mb}}</strong>
                     </li>
                     <li class="list-group-item">
                         Orgin
-                        <strong class="text-danger">{{this.orgin}}</strong>
+                        <strong class="text-primary">{{this.orgin}}</strong>
                     </li>
                     <li class="list-group-item">
                         Current
-                        <strong class="text-danger">{{this.current}}</strong>
+                        <strong class="text-primary">{{this.current}}</strong>
                     </li>
                     <li class="list-group-item">
                         Part Number
-                        <strong class="text-danger">{{this.part_num}}</strong>
+                        <strong class="text-primary">{{this.part_num}}</strong>
                     </li>
                     <li class="list-group-item">
                         Serial Number
-                        <strong class="text-danger">{{this.serial_num}}</strong>
+                        <strong class="text-primary">{{this.serial_num}}</strong>
                     </li>
                     <li class="list-group-item">
                         Date Added
-                        <strong class="text-danger">{{this.time_added}}</strong>
+                        <strong class="text-primary">{{this.time_added}}</strong>
                     </li>
                     <li class="list-group-item">
                         Last Modified
-                        <strong class="text-danger">{{this.last_modified}}</strong>
+                        <strong class="text-primary">{{this.last_modified}}</strong>
                     </li>
                 </ul>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <a href="/itemdel/{{this.id}}" type="button" class="btn btn-danger"><i class="bi bi-trash"></i>
-                    Delete</a>
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>

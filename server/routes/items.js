@@ -5,6 +5,7 @@ const pageController = require('../controllers/pageController');
 const softwareController = require('../controllers/softwareController');
 
 router.get('/', pageController.dash);
+router.get('/settingsPage', pageController.settingsPage);
 
 // // crete, find, update, delete
 router.get('/item-catalog', itemController.view);

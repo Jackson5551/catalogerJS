@@ -43,6 +43,7 @@
             data-bs-target="#itemaddmodal"><i class="bi bi-plus-lg"></i> Add Item</a>
         {{!-- <a href="/add-item" type="button" class="btn btn-primary align-self-center"><i class="bi bi-plus-lg"></i>
             Add Item</a> --}}
+        {{> itemaddmodal}}
     </div>
 </div>
 
@@ -79,21 +80,33 @@
             <td>{{this.frm_fctr}}</td>
             <td class="text-end">
                 <div>
-                    <a href="/view-item/{{this.id}}" type="button" class="btn btn-light btn-sm mt-1"><i
-                            class="bi bi-eye"></i> View</a>
-                    <a type="button" class="btn btn-warning btn-sm mt-1" data-bs-toggle="modal"
-                        data-bs-target="#itemeditmodal{{this.id}}"><i class=" bi bi-pencil"></i> Edit</a>
-                    {{!-- <a href="/edit-item/{{this.id}}" type="button" class="btn btn-warning btn-sm mt-1"><i
-                            class="bi bi-pencil"></i> Edit</a> --}}
-                    <a type="button" class="btn btn-danger btn-sm mt-1" data-bs-toggle="modal"
-                        data-bs-target="#itemdelmodal{{this.id}}"><i class="bi bi-trash"></i>
-                        Delete</a>
-                </div>
+                    <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+                        <a href="/view-item/{{this.id}}" type="button" class="btn btn-light btn-sm mt-1"><i class="bi bi-eye"></i>
+                            View</a>
+                        <div class="btn-group" role="group">
+                            <button id="btnGroupDrop1" type="button" class="btn btn-light btn-sm mt-1 dropdown-toggle"
+                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+                            <div class="dropdown-menu" aria-labelledby="btnGroupDrop1" style="">
+                                <a class="dropdown-item" href="/view-item/{{this.id}}">Detailed View</a>
+                                <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#itemviewmodal{{this.id}}">Quick View</a>
+                            </div>
+                        </div>
+                    </div>
+                        {{!-- <a href="/view-item/{{this.id}}" type="button" class="btn btn-light btn-sm mt-1"><i
+                                class="bi bi-eye"></i> View</a> --}}
+                        <a type="button" class="btn btn-warning btn-sm mt-1" data-bs-toggle="modal"
+                            data-bs-target="#itemeditmodal{{this.id}}"><i class=" bi bi-pencil"></i> Edit</a>
+                        {{!-- <a href="/edit-item/{{this.id}}" type="button" class="btn btn-warning btn-sm mt-1"><i
+                                class="bi bi-pencil"></i> Edit</a> --}}
+                        <a type="button" class="btn btn-danger btn-sm mt-1" data-bs-toggle="modal"
+                            data-bs-target="#itemdelmodal{{this.id}}"><i class="bi bi-trash"></i>
+                            Delete</a>
+                    </div>
             </td>
         </tr>
         {{> itemdelmodal}}
         {{> itemeditmodal}}
-        {{> itemaddmodal}}
+        {{> itemviewmodal}}
         {{/each}}
 
     </tbody>
