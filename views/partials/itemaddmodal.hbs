@@ -1,0 +1,82 @@
+<div class="modal fade" id="itemaddmodal" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel"><i class="bi bi-plus-lg"></i> Add Item</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="container">
+                <form class="row g-3 needs-validation mt-3" method="POST" action="/add-item/"
+                    encType="multipart/form-data">
+                    <div class="container mb-3">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="floatingInput" placeholder="Title" name="title"
+                                value="">
+                            <label for="floatingInput">Title</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <textarea name="descr" cols="40" rows="5" class="form-control" id="floatingInput"
+                                placeholder="Description"></textarea>
+                            <label for="floatingInput">Description</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="floatingInput" placeholder="Orgin" name="orgin"
+                                value="">
+                            <label for="floatingInput">Orgin</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="floatingInput" placeholder="Current"
+                                name="current" value="">
+                            <label for="floatingInput">Current</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="floatingInput" placeholder="Catagory"
+                                name="catagory" value="">
+                            <label for="floatingInput">Catagory</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="floatingInput" placeholder="Manufacturer"
+                                name="mnfctr" value="">
+                            <label for="floatingInput">Manufacturer</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="floatingInput" placeholder="Form Factor"
+                                name="frm_fctr" value="">
+                            <label for="floatingInput">Form Factor</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="floatingInput"
+                                placeholder="Storage Amount in GB" name="strg_amnt_gb" value="">
+                            <label for="floatingInput">Storage Amount in GB</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="floatingInput" placeholder="Memory Amount in MB"
+                                name="mem_amnt_mb" value="">
+                            <label for="floatingInput">Memory Amount in MB</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="floatingInput" placeholder="Part Number"
+                                name="part_num" value="">
+                            <label for="floatingInput">Part Number</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="floatingInput" placeholder="Serial Number"
+                                name="serial_num" value="">
+                            <label for="floatingInput">Serial Number</label>
+                        </div>
+                        <label for="inputGroupFile04">Choose an image</label>
+                        <div class="input-group">
+                            <input type="file" class="form-control" id="inputGroupFile04"
+                                aria-describedby="inputGroupFileAddon04" aria-label="Upload" name="itemImage">
+                        </div>
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button class="btn btn-primary" type="submit"><i class="bi bi-plus-lg"></i> Add</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>

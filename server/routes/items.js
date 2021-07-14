@@ -23,5 +23,7 @@ router.get('/view-item/:id', itemController.viewall);
 router.get('/view-software/:id', softwareController.viewall);
 router.get('/itemdel/:id', itemController.delete);
 router.get('/softwaredel/:id', softwareController.delete);
+router.post('/update-software/:id', softwareController.update);
+router.post('/update-item/:id', itemController.update);
 
 module.exports = router;

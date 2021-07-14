@@ -1,6 +1,24 @@
 {{#if removedItem}}
 <div class="alert alert-success alert-dismissible fade show" role="alert">
-    {{removedItem}}
+    Item Removed
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{{/if}}
+{{#if editedItem}}
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+    {{editedItem}} has been updated
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{{/if}}
+{{#if addedItem}}
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+    {{addedItem}} has been added
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{{/if}}
+{{#if error}}
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+    Could not complete operation
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
 {{/if}}
@@ -21,8 +39,10 @@
         <h1>Items</h1>
     </div>
     <div class="col-6 d-flex justify-content-end">
-        <a href="/add-item" type="button" class="btn btn-primary align-self-center"><i class="bi bi-plus-lg"></i> Add
-            Item</a>
+        <a type="button" class="btn btn-primary align-self-center" data-bs-toggle="modal"
+            data-bs-target="#itemaddmodal"><i class="bi bi-plus-lg"></i> Add Item</a>
+        {{!-- <a href="/add-item" type="button" class="btn btn-primary align-self-center"><i class="bi bi-plus-lg"></i>
+            Add Item</a> --}}
     </div>
 </div>
 
@@ -61,15 +81,19 @@
                 <div>
                     <a href="/view-item/{{this.id}}" type="button" class="btn btn-light btn-sm mt-1"><i
                             class="bi bi-eye"></i> View</a>
-                    <a href="/edit-item/{{this.id}}" type="button" class="btn btn-warning btn-sm mt-1"><i
-                            class="bi bi-pencil"></i> Edit</a>
+                    <a type="button" class="btn btn-warning btn-sm mt-1" data-bs-toggle="modal"
+                        data-bs-target="#itemeditmodal{{this.id}}"><i class=" bi bi-pencil"></i> Edit</a>
+                    {{!-- <a href="/edit-item/{{this.id}}" type="button" class="btn btn-warning btn-sm mt-1"><i
+                            class="bi bi-pencil"></i> Edit</a> --}}
                     <a type="button" class="btn btn-danger btn-sm mt-1" data-bs-toggle="modal"
-                        data-bs-target="#exampleModal{{this.id}}"><i class="bi bi-trash"></i>
+                        data-bs-target="#itemdelmodal{{this.id}}"><i class="bi bi-trash"></i>
                         Delete</a>
                 </div>
             </td>
         </tr>
         {{> itemdelmodal}}
+        {{> itemeditmodal}}
+        {{> itemaddmodal}}
         {{/each}}
 
     </tbody>

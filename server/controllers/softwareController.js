@@ -26,7 +26,10 @@ exports.view = (req, res) => {
             connection.release();
             if (!err) {
                 let removedSoftware = req.query.removed;
-                res.render('software-catalog', { rows, removedSoftware });
+                let editedSoftware = req.query.edited;
+                let addedSoftware = req.query.added;
+                let error = req.query.error;
+                res.render('software-catalog', { rows, error, removedSoftware, editedSoftware, addedSoftware });
             } else {
                 console.log(err);
             }
@@ -47,13 +50,15 @@ exports.find = (req, res) => {
 
         // Use the connection
         connection.query('USE jackson_catalog');
-        connection.query('SELECT * FROM software WHERE name LIKE ? OR mnfctr LIKE ? OR version LIKE ?', ['%' + searchTerm + '%', '%' + searchTerm + '%', '%' + searchTerm + '%'], (err, rows) => {
+        connection.query('SELECT * FROM software WHERE name LIKE ? OR mnfctr LIKE ? OR version LIKE ? ORDER BY `catagory` ASC', ['%' + searchTerm + '%', '%' + searchTerm + '%', '%' + searchTerm + '%'], (err, rows) => {
             // Whem done with connection, release it
             connection.release();
             if (!err) {
                 res.render('software-catalog', { rows });
             } else {
-                console.log(err);
+                // console.log(err);
+                let error = encodeURIComponent(`Error`);
+                res.redirect('/software-catalog?error=' + error);
             }
             //console.log('The data from table: \n', rows);
         });
@@ -87,9 +92,13 @@ exports.create = (req, res) => {
                 // Whem done with connection, release it
                 connection.release();
                 if (!err) {
-                    res.render('add-software', { alert: `${name} has been added successfully.` });
+                    // res.render('software-catalog', { alert: `${name} has been added successfully.` });
+                    let addedSoftware = encodeURIComponent(`${name}`);
+                    res.redirect('/software-catalog?added=' + addedSoftware);
                 } else {
-                    console.log(err);
+                    // console.log(err);
+                    let error = encodeURIComponent(`Error`);
+                    res.redirect('/software-catalog?error=' + error);
                 }
                 //console.log('The data from table: \n', rows);
             });
@@ -114,9 +123,13 @@ exports.create = (req, res) => {
                     // Whem done with connection, release it
                     connection.release();
                     if (!err) {
-                        res.render('add-software', { alert: `${name} has been added successfully.` });
+                        // res.render('add-software', { alert: `${name} has been added successfully.` });
+                        let addedSoftware = encodeURIComponent(`${name}`);
+                        res.redirect('/software-catalog?added=' + addedSoftware);
                     } else {
-                        console.log(err);
+                        // console.log(err);
+                        let error = encodeURIComponent(`Error`);
+                        res.redirect('/software-catalog?error=' + error);
                     }
                     //console.log('The data from table: \n', rows);
                 });
@@ -146,7 +159,9 @@ exports.edit = (req, res) => {
             if (!err) {
                 res.render('edit-software', { rows });
             } else {
-                console.log(err);
+                // console.log(err);
+                let error = encodeURIComponent(`Error`);
+                res.redirect('/software-catalog?error=' + error);
             }
             //console.log('The data from table: \n', rows);
         });
@@ -155,7 +170,8 @@ exports.edit = (req, res) => {
 
 exports.update = (req, res) => {
     const { name, mnfctr, version, format, num_of_media, architecture, catagory, prod_key } = req.body;
-    console.log(req.body)
+    console.log("Body: ",req.body)
+    console.log(name);
     pool.getConnection((err, connection) => {
         if (err) throw err; // not connected
         console.log('Connected as ID ' + connection.threadId);
@@ -179,19 +195,27 @@ exports.update = (req, res) => {
                         console.log('Connected as ID ' + connection.threadId);
                         // Use the connection
                         connection.query('USE jackson_catalog');
-                        connection.query('SELECT * FROM software WHERE id = ?', [req.params.id], (err, rows) => {
+                        connection.query('SELECT * FROM software ORDER BY `catagory` ASC', (err, rows) => {
                             // Whem done with connection, release it
                             connection.release();
                             if (!err) {
                                 console.log(rows);
-                                res.render('edit-software', { rows, alert: `${name} has been updated.` });
+                                // res.render('software-catalog', { rows, alert: `${name} has been updated.` });
+                                let editedsoftware = encodeURIComponent(`${name}`);
+                                res.redirect('/software-catalog?edited=' + editedsoftware);
                             } else {
-                                console.log(err);
+                                // console.log(err);
+                                let error = encodeURIComponent(`Error`);
+                                res.redirect('/software-catalog?error=' + error);
                             }
                             //console.log('The data from table: \n', rows);
                         });
                     });
-                };
+                } else{
+                    // console.log(err);
+                    let error = encodeURIComponent(`Error`);
+                    res.redirect('/software-catalog?error=' + error);
+                }
             });
         } else {
             console.log('Image')
@@ -224,17 +248,22 @@ exports.update = (req, res) => {
                                 // Whem done with connection, release it
                                 connection.release();
                                 if (!err) {
-                                    console.log('The data from table: \n', rows);
-                                    res.render('edit-software', { rows, alert: `${name} has been updated.` });
+                                    // console.log('The data from table: \n', rows);
+                                    // res.render('edit-software', { rows, alert: `${name} has been updated.` });
+                                    let editedsoftware = encodeURIComponent(`${name}`);
+                                    res.redirect('/software-catalog?edited=' + editedsoftware);
                                 } else {
-                                    console.log(err);
+                                    // console.log(err);
+                                    let error = encodeURIComponent(`Error`);
+                                    res.redirect('/software-catalog?error=' + error);
                                 }
-                                console.log('The data from table: \n', rows);
+                                // console.log('The data from table: \n', rows);
                             });
-                            console.log('After submission')
                         });
                     } else {
-                        console.log(err);
+                        // console.log(err);
+                        let error = encodeURIComponent(`Error`);
+                        res.redirect('/software-catalog?error=' + error);
                     }
                 });
             });
@@ -255,10 +284,12 @@ exports.delete = (req, res) => {
             // Whem done with connection, release it
             connection.release();
             if (!err) {
-                let removedSoftware = encodeURIComponent('Item removed.');
+                let removedSoftware = encodeURIComponent('Removed');
                 res.redirect('/software-catalog?removed=' + removedSoftware);
             } else {
-                console.log(err);
+                // console.log(err);
+                let error = encodeURIComponent(`Error`);
+                res.redirect('/software-catalog?error=' + error);
             }
             //console.log('The data from table: \n', rows);
         });
@@ -294,7 +325,9 @@ exports.viewall = (req, res) => {
                     res.render('view-software', { rows, send });
                 }
             } else {
-                console.log(err);
+                // console.log(err);
+                let error = encodeURIComponent(`Error`);
+                res.redirect('/software-catalog?error=' + error);
             }
             //console.log('The data from table: \n', rows);
         });

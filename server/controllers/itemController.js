@@ -27,9 +27,13 @@ exports.view = (req, res) => {
             connection.release();
             if (!err) {
                 let removedItem = req.query.removed;
-                res.render('item-catalog', { rows, removedItem });
+                let editedItem = req.query.edited;
+                let addedItem = req.query.added;
+                let error = req.query.error;
+                res.render('item-catalog', { rows, error, removedItem, editedItem, addedItem });
             } else {
-                console.log(err);
+                let error = encodeURIComponent(`Error`);
+                res.redirect('/item-catalog?error=' + error);
             }
             //console.log('The data from table: \n', rows);
         });
@@ -48,13 +52,15 @@ exports.find = (req, res) => {
 
         // Use the connection
         connection.query('USE jackson_catalog');
-        connection.query('SELECT * FROM items WHERE title LIKE ? OR descr LIKE ? OR mnfctr LIKE ?', ['%' + searchTerm + '%', '%' + searchTerm + '%', '%' + searchTerm + '%'], (err, rows) => {
+        connection.query('SELECT * FROM items WHERE title LIKE ? OR descr LIKE ? OR mnfctr LIKE ? ORDER BY `catagory` ASC', ['%' + searchTerm + '%', '%' + searchTerm + '%', '%' + searchTerm + '%'], (err, rows) => {
             // Whem done with connection, release it
             connection.release();
             if (!err) {
                 res.render('item-catalog', { rows });
             } else {
-                console.log(err);
+                // console.log(err);
+                let error = encodeURIComponent(`Error`);
+                res.redirect('/item-catalog?error=' + error);
             }
             //console.log('The data from table: \n', rows);
         });
@@ -80,30 +86,50 @@ exports.create = (req, res) => {
         let uploadPath;
 
         if (!req.files || Object.keys(req.files).length === 0) {
-            return res.status(400).send('No files were uploaded.');
-        }
-
-        sampleFile = req.files.itemImage;
-        uploadPath = '.' + '/upload/' + sampleFile.name;
-
-        sampleFile.mv(uploadPath, function (err) {
-            if (err) return res.status(500).send(err);
-
-            const data = readImageFile(uploadPath);
-
             // Use the connection
             connection.query('USE jackson_catalog');
-            connection.query('INSERT INTO items SET title = ?, descr = ?, orgin = ?, current = ?, catagory = ?, strg_amnt_gb = ?, mem_amnt_mb = ?, mnfctr = ?, frm_fctr = ?, image = BINARY(?), part_num = ?, serial_num = ?', [title, descr, orgin, current, catagory, strg_amnt_gb, mem_amnt_mb, mnfctr, frm_fctr, data, part_num, serial_num], (err, rows) => {
+            connection.query('INSERT INTO items SET title = ?, descr = ?, orgin = ?, current = ?, catagory = ?, strg_amnt_gb = ?, mem_amnt_mb = ?, mnfctr = ?, frm_fctr = ?, part_num = ?, serial_num = ?', [title, descr, orgin, current, catagory, strg_amnt_gb, mem_amnt_mb, mnfctr, frm_fctr, part_num, serial_num], (err, rows) => {
                 // Whem done with connection, release it
                 connection.release();
                 if (!err) {
-                    res.render('add-item', { alert: `${title} has been added successfully.` });
+                    // res.render('add-item', { alert: `${title} has been added successfully.` });
+                    let addedItem = encodeURIComponent(`${title}`);
+                    res.redirect('/item-catalog?added=' + addedItem);
                 } else {
-                    console.log(err);
+                    // console.log(err);
+                    let error = encodeURIComponent(`Error`);
+                    res.redirect('/item-catalog?error=' + error);
                 }
                 //console.log('The data from table: \n', rows);
             });
-        });
+        } else {
+
+            sampleFile = req.files.itemImage;
+            uploadPath = '.' + '/upload/' + sampleFile.name;
+
+            sampleFile.mv(uploadPath, function (err) {
+                if (err) return res.status(500).send(err);
+
+                const data = readImageFile(uploadPath);
+
+                // Use the connection
+                connection.query('USE jackson_catalog');
+                connection.query('INSERT INTO items SET title = ?, descr = ?, orgin = ?, current = ?, catagory = ?, strg_amnt_gb = ?, mem_amnt_mb = ?, mnfctr = ?, frm_fctr = ?, image = BINARY(?), part_num = ?, serial_num = ?', [title, descr, orgin, current, catagory, strg_amnt_gb, mem_amnt_mb, mnfctr, frm_fctr, data, part_num, serial_num], (err, rows) => {
+                    // Whem done with connection, release it
+                    connection.release();
+                    if (!err) {
+                        // res.render('add-item', { alert: `${title} has been added successfully.` });
+                        let addedItem = encodeURIComponent(`${title}`);
+                        res.redirect('/item-catalog?added=' + addedItem);
+                    } else {
+                        // console.log(err);
+                        let error = encodeURIComponent(`Error`);
+                        res.redirect('/item-catalog?error=' + error);
+                    }
+                    //console.log('The data from table: \n', rows);
+                });
+            });
+        }
     });
 }
 
@@ -129,7 +155,9 @@ exports.edit = (req, res) => {
             if (!err) {
                 res.render('edit-item', { rows });
             } else {
-                console.log(err);
+                // console.log(err);
+                let error = encodeURIComponent(`Error`);
+                res.redirect('/item-catalog?error=' + error);
             }
             //console.log('The data from table: \n', rows);
         });
@@ -161,15 +189,21 @@ exports.update = (req, res) => {
                             // Whem done with connection, release it
                             connection.release();
                             if (!err) {
-                                res.render('edit-item', { rows, alert: `${title} has been updated.` });
+                                // res.render('edit-item', { rows, alert: `${title} has been updated.` });
+                                let editedItem = encodeURIComponent(`${title}`);
+                                res.redirect('/item-catalog?edited=' + editedItem);
                             } else {
-                                console.log(err);
+                                // console.log(err);
+                                let error = encodeURIComponent(`Error`);
+                                res.redirect('/item-catalog?error=' + error);
                             }
                             //console.log('The data from table: \n', rows);
                         });
                     });
                 } else {
-                    console.log(err);
+                    // console.log(err);
+                    let error = encodeURIComponent(`Error`);
+                    res.redirect('/item-catalog?error=' + error);
                 }
                 //console.log('The data from table: \n', rows);
             });
@@ -208,16 +242,22 @@ exports.update = (req, res) => {
                                     // Whem done with connection, release it
                                     connection.release();
                                     if (!err) {
-                                        res.render('edit-item', { rows, alert: `${title} has been updated.` });
+                                        // res.render('edit-item', { rows, alert: `${title} has been updated.` });
+                                        let editedItem = encodeURIComponent(`${title}`);
+                                        res.redirect('/item-catalog?edited=' + editedItem);
                                     } else {
-                                        console.log(err);
+                                        // console.log(err);
+                                        let error = encodeURIComponent(`Error`);
+                                        res.redirect('/item-catalog?error=' + error);
                                     }
                                     //console.log('The data from table: \n', rows);
                                 });
                             });
                         });
                     } else {
-                        console.log(err);
+                        // console.log(err);
+                        let error = encodeURIComponent(`Error`);
+                        res.redirect('/item-catalog?error=' + error);
                     }
                     //console.log('The data from table: \n', rows);
                 });
@@ -243,7 +283,9 @@ exports.delete = (req, res) => {
                 let rmovedItem = encodeURIComponent('Item removed.');
                 res.redirect('/item-catalog?removed=' + rmovedItem);
             } else {
-                console.log(err);
+                // console.log(err);
+                let error = encodeURIComponent(`Error`);
+                res.redirect('/item-catalog?error=' + error);
             }
             //console.log('The data from table: \n', rows);
         });
@@ -280,7 +322,9 @@ exports.viewall = (req, res) => {
                     res.render('view-item', { rows, send });
                 }
             } else {
-                console.log(err);
+                // console.log(err);
+                let error = encodeURIComponent(`Error`);
+                res.redirect('/item-catalog?error=' + error);
             }
             //console.log('The data from table: \n', rows);
         });

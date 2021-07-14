@@ -1,53 +1,52 @@
-<div class="modal fade" id="softeditmodal{{this.id}}" tabindex="-1" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
+<div class="modal fade" id="softaddmodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel"><i class="bi bi-pencil"></i> Edit Software</h5>
+                <h5 class="modal-title" id="exampleModalLabel"><i class="bi bi-plus-lg"></i> Add Software</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="container">
-                <form class="row g-3 needs-validation mt-3" method="POST" action="/update-software/{{this.id}}"
+                <form class="row g-3 needs-validation mt-3" method="POST" action="/add-software/"
                     encType="multipart/form-data">
                     <div class="container mb-3">
                         <div class="form-floating mb-3">
                             <input type="text" class="form-control" id="floatingInput" placeholder="Name" name="name"
-                                value="{{this.name}}">
+                                value="">
                             <label for="floatingInput">Name</label>
                         </div>
                         <div class="form-floating mb-3">
                             <input type="text" class="form-control" id="floatingInput" placeholder="Manufacturer"
-                                name="mnfctr" value="{{this.mnfctr}}">
+                                name="mnfctr" value="">
                             <label for="floatingInput">Manufacturer</label>
                         </div>
                         <div class="form-floating mb-3">
                             <input type="text" class="form-control" id="floatingInput" placeholder="Version"
-                                name="version" value="{{this.version}}">
+                                name="version" value="">
                             <label for="floatingInput">Version</label>
                         </div>
                         <div class="form-floating mb-3">
                             <input type="text" class="form-control" id="floatingInput" placeholder="Format"
-                                name="format" value="{{this.format}}">
+                                name="format" value="">
                             <label for="floatingInput">Format</label>
                         </div>
                         <div class="form-floating mb-3">
                             <input type="text" class="form-control" id="floatingInput" placeholder="Number of Media"
-                                name="num_of_media" value="{{this.num_of_media}}">
+                                name="num_of_media" value="">
                             <label for="floatingInput">Number of Media</label>
                         </div>
                         <div class="form-floating mb-3">
                             <input type="text" class="form-control" id="floatingInput" placeholder="Architecture"
-                                name="architecture" value="{{this.architecture}}">
+                                name="architecture" value="">
                             <label for="floatingInput">Architecture</label>
                         </div>
                         <div class="form-floating mb-3">
                             <input type="text" class="form-control" id="floatingInput" placeholder="Catagory"
-                                name="catagory" value="{{this.catagory}}">
+                                name="catagory" value="">
                             <label for="floatingInput">Catagory</label>
                         </div>
                         <div class="form-floating mb-3">
                             <input type="text" class="form-control" id="floatingInput" placeholder="Product Key"
-                                name="prod_key" value="{{this.prod_key}}">
+                                name="prod_key" value="">
                             <label for="floatingInput">Product Key</label>
                         </div>
                         <label for="inputGroupFile04">Choose an image</label>
@@ -57,10 +56,10 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         {{!-- <a href="/software-catalog/update/{{this.id}}" type="button" class="btn btn-warning"></i>
                             Submit</a> --}}
-                        <button class="btn btn-warning" type="submit"><i class="bi bi-pencil"></i> Submit</button>
+                        <button class="btn btn-primary" type="submit"><i class="bi bi-plus-lg"></i> Add</button>
                     </div>
                 </form>
             </div>
