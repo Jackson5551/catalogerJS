@@ -69,12 +69,11 @@
                         <li class="list-group-item text-primary">Current: <strong>{{this.current}}</strong></li>
                     </ul>
                     <div class="card-body">
-                        <a href="/edit-item/{{this.id}}" type="button" class="btn btn-warning btn-sm"><i
-                                class="bi bi-pencil"></i>
-                            Edit</a>
-                        <a href="/itemdel/{{this.id}}" type="button" class="btn btn-danger btn-sm"><i
-                                class="bi bi-trash"></i>
-                            Delete</a>
+                    <a type="button" class="btn btn-warning btn-sm mt-1" data-bs-toggle="modal"
+                        data-bs-target="#itemeditmodal{{this.id}}"><i class=" bi bi-pencil"></i> Edit</a>
+                    <a type="button" class="btn btn-danger btn-sm mt-1" data-bs-toggle="modal" data-bs-target="#itemdelmodal{{this.id}}"><i
+                            class="bi bi-trash"></i>
+                        Delete</a>
                     </div>
                     <div class="card-footer text-muted">
                         Part Number: <strong>{{this.part_num}}</strong> | Serial Number:
@@ -89,6 +88,8 @@
 
 
             </div>
+                    {{> itemdelmodal}}
+                    {{> itemeditmodal}}
         </div>
         {{/each}}
         <div class="card mb-3">
